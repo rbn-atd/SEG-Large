@@ -1,0 +1,96 @@
+
+{% extends 'base_content.html' %}
+
+{% block content %}
+
+<header>
+    <!---Search Box--->
+    <form action="{% url 'search_result' %}" role="form" method="GET">
+        <div class="search-box">
+            <div>
+                <select name="" id="" style="border-radius: 10px;">
+                    <option value="everything"> Everything </option>
+                    <option value="titles"> Titles </option>
+                    <option value="description"> Description </option>
+                </select>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+                <input type="text" name="q" id="" placeholder="search ..." style="background-color: white; opacity: 0.5; border-radius: 10px;">
+                <button type="submit" name ="search" style="border-radius: 50px 50px 50px 50px;"><i class="fa fa-search"></i></button>
+            </div>
+    </div>
+</form>
+</header>
+<div>
+    {% if user.is_authenticated %}
+        <div class="post-box"><a href="{% url 'create_post' %}"> + </a></div>
+        {% endif %}
+</div>
+
+        <div class="container" style="margin:0px">
+            <div class="subforum">
+                <div class="subforum-title">
+                    <h1> General Information </h1>
+                    </div>
+
+                    {% for category in all_forum_categories %}
+                    <div class="subforum-row">
+                        <div class="subforum-icon subforum-column center">
+                            <i class="fa fa-car"></i>
+                        </div>
+                        <div class="subforum-description subforum-column subforum-description">
+                            <h1><a href="{{category.get_url}}"> {{category.title}} </a></h1>
+                            <p> Description: {{category.description}} </p>
+                        </div>
+                        <div class="subforum-stats subforum-column center">
+                            <span> {{category.num_posts}} Posts </span>
+                        </div>
+                        <div class="subforum-info subforum-column">
+                            {% if category.last_post %}
+                                <b><a href="{{category.last_post.get_url}}"> Last Post </a></b>  by  <a href="{% url 'profile' category.last_post.user.id %}">{% if category.last_post.user.username is not None %}
+                                                                                                                    {{category.last_post.user.username|title}}
+                                                                                                                {% else %}
+                                                                                                                    {{category.last_post.user.first_name}} {{category.last_post.user.last_name}}
+                                                                                                                {% endif %}</a>
+                                <br>
+                                on <small> {{category.last_post.date|date}} </small>
+                            {% else %}
+                                <span> This forum is empty. </span>
+                                <br>
+                                <span> Be the first to post! </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+        </div>
+
+
+    </div>
+
+<!--- Forum Info -->
+    <div class="forum-info">
+        <div class="chart">
+            My Forum - Stats &nbsp; <i class="fa fa-bar-chart"></i>
+        </div>
+        {% if Post.objects.count != 0 %}
+        <div>
+            <span> <u> {{num_posts}} </u> Posts in <u> {{num_categorise}} </u>Topics by <u> {{num_users}} </u> Users </span> <br>
+            {% if last_post %}
+                <span> Check <a href="{% url 'latest_posts' %}"></a> <u> Latest Post </u> :  &nbsp; <b><a href="{{last_post.get_url}}">{{last_post.title}}</a></b> on {{late_post.date|date}} by <a href="{% url 'profile' last_post.user.id %}">{% if last_post.user.username is not None %}
+                                                                                                                                                                                                            {{last_post.user.username|title}}
+                                                                                                                                                                                                        {% else %}
+                                                                                                                                                                                                            {{last_post.user.first_name}} {{last_post.user.last_name}}
+                                                                                                                                                                                                        {% endif %}</a></span>
+            {% endif %}
+        </div>
+
+        {% else %}
+        <div>
+            <span> This forum is empty. </span>
+            <br>
+            <span> Be the first to post! </span>
+        </div>
+        {% endif %}
+
+    </div>
+
+{% endblock content %}

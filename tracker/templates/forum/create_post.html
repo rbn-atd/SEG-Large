@@ -1,0 +1,21 @@
+{% extends 'base_content.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<h1 style="text-align:center; margin-block:50px; color:rgb(255, 255, 255)"> Hey, {% if user.username is not None %}
+                        {{user.username|title}}
+                       {% else %}
+                        {{user.first_name}} {{user.last_name}}
+                        {% endif %} create a post</h1>
+
+<form method="POST" style="margin-left:150px;" enctype="multipart/form-data">
+
+{% csrf_token %}
+
+{% include 'partials/bootstrap_form.html' with form=form %}
+
+    <input type="submit" value="Save" style="margin-block:50px; border-radius: 50px 50px 50px 50px;">
+</form>
+
+
+{% endblock %}
